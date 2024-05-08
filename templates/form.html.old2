@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GPX Waypoints Generator</title>
+    <style>
+        table { width: 50%; }
+        th, td { padding: 5px; text-align: left; }
+    </style>
+    <script>
+        function autoAddRow(event, rowId) {
+            // Add new row if the last longitude field is not empty
+            const lonField = document.getElementById('lon-' + rowId);
+            if (lonField.value !== '') {
+                const nextRowId = parseInt(rowId) + 1;
+                const newRow = `
+                    <tr id="row-${nextRowId}">
+                        <td><input type="text" id="lat-${nextRowId}" name="lat[${nextRowId}]" placeholder="Latitude" oninput="autoAddRow(event, ${nextRowId})"></td>
+                        <td><input type="text" id="lon-${nextRowId}" name="lon[${nextRowId}]" placeholder="Longitude" oninput="autoAddRow(event, ${nextRowId})"></td>
+                    </tr>
+                `;
+                const table = document.getElementById('coordinate-table');
+                table.insertAdjacentHTML('beforeend', newRow);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>GPX Waypoints Generator</h1>
+    <form action="/generate" method="post">
+        <table id="coordinate-table">
+            <thead>
+                <tr>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="row-0">
+                    <td><input type="text" id="lat-0" name="lat[0]" placeholder="Latitude" oninput="autoAddRow(event, 0)"></td>
+                    <td><input type="text" id="lon-0" name="lon[0]" placeholder="Longitude" oninput="autoAddRow(event, 0)"></td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <input type="submit" value="Generate GPX">
+    </form>
+</body>
+</html>

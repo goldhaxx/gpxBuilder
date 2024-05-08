@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GPX Waypoints Generator</title>
+    <style>
+        table { width: 100%; }
+        th, td { padding: 5px; text-align: left; }
+        #map { width: 100%; height: 400px; margin-bottom: 20px; }
+        #coordinate-container {
+            width: 100%;
+            max-height: 300px; /* Adjust this value based on how much height you want to allocate */
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        let nextRowId = 0;
+        let map;
+        let waypoints = [];
+        let polyline;
+
+        // Function to initialize Google Maps
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 32.8049, lng: -117.0259 }, // Initial center
+                zoom: 14
+            });
+
+            // Initialize the polyline that will connect waypoints
+            polyline = new google.maps.Polyline({
+                path: waypoints,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+            polyline.setMap(map);
+
+            // Listen for right-click events on the map
+            map.addListener('rightclick', function (event) {
+                const lat = event.latLng.lat().toFixed(6);
+                const lon = event.latLng.lng().toFixed(6);
+                addCoordinatesToFormAndMap(lat, lon);
+            });
+        }
+
+        // Function to add coordinates to the form and map
+        function addCoordinatesToFormAndMap(lat, lon) {
+            // Populate the latitude and longitude fields
+            document.getElementById('lat-' + nextRowId).value = lat;
+            document.getElementById('lon-' + nextRowId).value = lon;
+
+            // Increment row count and add a new row
+            nextRowId++;
+            addRow(nextRowId);
+            document.getElementById('lat-' + nextRowId).focus();
+
+            // Add marker on the map
+            const position = new google.maps.LatLng(lat, lon);
+            waypoints.push(position);
+            new google.maps.Marker({
+                position: position,
+                map: map
+            });
+
+            // Update polyline path
+            polyline.setPath(waypoints);
+        }
+
+        // Function to add a new row dynamically
+        function addRow(rowId) {
+            const newRow = `
+                <tr id="row-${rowId}">
+                    <td><input type="text" id="lat-${rowId}" name="lat[${rowId}]" placeholder="Latitude"></td>
+                    <td><input type="text" id="lon-${rowId}" name="lon[${rowId}]" placeholder="Longitude"></td>
+                </tr>
+            `;
+            const table = document.getElementById('coordinate-table-body');
+            table.insertAdjacentHTML('beforeend', newRow);
+        }
+
+        // Initial function call to set up the first input row
+        document.addEventListener('DOMContentLoaded', () => addRow(nextRowId));
+    </script>
+</head>
+<body>
+    <h1>GPX Waypoints Generator</h1>
+
+    <!-- Map Element -->
+    <div id="map"></div>
+
+    <!-- Scrollable Container for the Form -->
+    <div id="coordinate-container">
+        <table id="coordinate-table">
+            <thead>
+                <tr>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                </tr>
+            </thead>
+            <tbody id="coordinate-table-body"></tbody>
+        </table>
+    </div>
+
+    <!-- Form -->
+    <form action="/generate" method="post">
+        <input type="submit" value="Generate GPX">
+    </form>
+
+    <!-- Google Maps JavaScript API -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFGTxOa4hzLxpS5aibw2_52sS9IMYXf2U&callback=initMap"></script>
+</body>
+</html>
