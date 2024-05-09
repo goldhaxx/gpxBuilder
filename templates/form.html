@@ -73,8 +73,8 @@
         function addRow(rowId) {
             const newRow = `
                 <tr id="row-${rowId}">
-                    <td><input type="text" id="lat-${rowId}" name="lat[${rowId}]" placeholder="Latitude"></td>
-                    <td><input type="text" id="lon-${rowId}" name="lon[${rowId}]" placeholder="Longitude"></td>
+                    <td><input type="text" id="lat-${rowId}" name="lat[]" placeholder="Latitude"></td>
+                    <td><input type="text" id="lon-${rowId}" name="lon[]" placeholder="Longitude"></td>
                 </tr>
             `;
             const table = document.getElementById('coordinate-table-body');
@@ -91,21 +91,19 @@
     <!-- Map Element -->
     <div id="map"></div>
 
-    <!-- Scrollable Container for the Form -->
-    <div id="coordinate-container">
-        <table id="coordinate-table">
-            <thead>
-                <tr>
-                    <th>Latitude</th>
-                    <th>Longitude</th>
-                </tr>
-            </thead>
-            <tbody id="coordinate-table-body"></tbody>
-        </table>
-    </div>
-
-    <!-- Form -->
+    <!-- Scrollable Container and Form for the Coordinates -->
     <form action="/generate" method="post">
+        <div id="coordinate-container">
+            <table id="coordinate-table">
+                <thead>
+                    <tr>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                    </tr>
+                </thead>
+                <tbody id="coordinate-table-body"></tbody>
+            </table>
+        </div>
         <input type="submit" value="Generate GPX">
     </form>
 
