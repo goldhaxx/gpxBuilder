@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>GPX Waypoints Generator</title>
@@ -10,6 +11,25 @@
             width: 100%;
             height: 400px;
             margin-bottom: 20px;
+        }
+
+        /* Bar containing the buttons and input */
+        #control-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+        }
+
+        /* Ensure all buttons have consistent styles */
+        .control-button {
+            padding: 5px 10px;
+            cursor: pointer;
         }
 
         /* Coordinate container styles */
@@ -27,7 +47,8 @@
             width: 100%;
         }
 
-        th, td {
+        th,
+        td {
             padding: 5px;
             text-align: left;
         }
@@ -43,12 +64,13 @@
         }
 
         /* Clear floats */
-        .clearfix::after {
+/*         .clearfix::after {
             content: "";
             display: table;
             clear: both;
-        }
-    </style>
+        } */
+
+</style>
 
     <script>
         let nextRowId = 0;
@@ -140,8 +162,8 @@
             }
         }
 
-                // Function to center the map on the user's current location
-                function centerOnCurrentLocation() {
+        // Function to center the map on the user's current location
+        function centerOnCurrentLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     const userLatLng = {
@@ -185,27 +207,36 @@
 
         // Initial function call to set up the first input row
         document.addEventListener('DOMContentLoaded', () => addRow(nextRowId));
+
+        // Function to submit the coordinates form
+        function submitCoordinatesForm() {
+            document.getElementById('coordinates-form').submit();
+        }
+
     </script>
 </head>
+
 <body>
     <h1>GPX Waypoints Generator</h1>
 
     <!-- Map Element -->
     <div id="map"></div>
 
-    <!-- Center on Current Location Button -->
-    <button onclick="centerOnCurrentLocation()">Center on Current Location</button>
-
-    <!-- Google Maps API Key Input and Button -->
-    <div>
-        <input type="text" id="user-api-key" placeholder="Enter your Google Maps API Key">
-        <button onclick="updateGoogleMapsKey()">Update API Key</button>
+    <!-- Control Bar with Buttons and Input Field -->
+    <div id="control-bar">
+        <div>
+            <input type="text" id="user-api-key" placeholder="Enter your Google Maps API Key">
+            <button class="control-button" onclick="updateGoogleMapsKey()">Update API Key</button>
+        </div>
+        <button class="control-button" onclick="centerOnCurrentLocation()">Center on Current Location</button>
+        <!-- Button triggers form submission via JavaScript -->
+        <button class="control-button" onclick="submitCoordinatesForm()">Generate GPX</button>
     </div>
 
-    <!-- Scrollable Container and GPX Preview -->
+    <!-- Scrollable Container and Form for the Coordinates -->
     <div class="clearfix">
         <!-- Coordinates Form -->
-        <form action="/generate" method="post">
+        <form id="coordinates-form" action="/generate" method="post">
             <div id="coordinate-container">
                 <table id="coordinate-table">
                     <thead>
@@ -217,14 +248,16 @@
                     <tbody id="coordinate-table-body"></tbody>
                 </table>
             </div>
-            <input type="submit" value="Generate GPX">
         </form>
+    </div>
 
-        <!-- GPX Preview -->
-        <div id="gpx-preview"></div>
+    <!-- GPX Preview -->
+    <div id="gpx-preview"></div>
     </div>
 
     <!-- Google Maps JavaScript API (Initial Load with Server-Provided Key) -->
-    <script id="google-maps-api" async defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
+    <script id="google-maps-api" async defer
+        src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
 </body>
+
 </html>
