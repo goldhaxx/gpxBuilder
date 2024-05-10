@@ -5,6 +5,16 @@
     <meta charset="UTF-8">
     <title>GPX Waypoints Generator</title>
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-r6nF3XlJGag+7va2KVIxx4s7eNt6n4nojKHrX0dk8VcOMqlv94FwvIm1Pj2Rr+aM" crossorigin="anonymous">
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6RqeW9WjesuK8U9uXU7M8HxBefgo4ghlvDpXsZT77/uXwjFBmtC6mG6i8qZwPjV"
+        crossorigin="anonymous"></script>
+
+
     <style>
         /* Map styles */
         #map {
@@ -64,13 +74,12 @@
         }
 
         /* Clear floats */
-/*         .clearfix::after {
+        /*         .clearfix::after {
             content: "";
             display: table;
             clear: both;
         } */
-
-</style>
+    </style>
 
     <script>
         let nextRowId = 0;
@@ -217,44 +226,45 @@
 </head>
 
 <body>
-    <h1>GPX Waypoints Generator</h1>
+    <div class="container mt-4">
+        <h1 class="mb-4">GPX Waypoints Generator</h1>
+        <div class="row">
+            <!-- Map Element -->
+            <div id="map"></div>
 
-    <!-- Map Element -->
-    <div id="map"></div>
-
-    <!-- Control Bar with Buttons and Input Field -->
-    <div id="control-bar">
-        <div>
-            <input type="text" id="user-api-key" placeholder="Enter your Google Maps API Key">
-            <button class="control-button" onclick="updateGoogleMapsKey()">Update API Key</button>
-        </div>
-        <button class="control-button" onclick="centerOnCurrentLocation()">Center on Current Location</button>
-        <!-- Button triggers form submission via JavaScript -->
-        <button class="control-button" onclick="submitCoordinatesForm()">Generate GPX</button>
-    </div>
-
-    <!-- Scrollable Container and Form for the Coordinates -->
-    <div class="clearfix">
-        <!-- Coordinates Form -->
-        <form id="coordinates-form" action="/generate" method="post">
-            <div id="coordinate-container">
-                <table id="coordinate-table">
-                    <thead>
-                        <tr>
-                            <th>Latitude</th>
-                            <th>Longitude</th>
-                        </tr>
-                    </thead>
-                    <tbody id="coordinate-table-body"></tbody>
-                </table>
+            <!-- Control Bar with Buttons and Input Field -->
+            <div id="control-bar">
+                <div>
+                    <input type="text" id="user-api-key" placeholder="Enter your Google Maps API Key">
+                    <button class="control-button" onclick="updateGoogleMapsKey()">Update API Key</button>
+                </div>
+                <button class="control-button" onclick="centerOnCurrentLocation()">Center on Current Location</button>
+                <!-- Button triggers form submission via JavaScript -->
+                <button class="control-button" onclick="submitCoordinatesForm()">Generate GPX</button>
             </div>
-        </form>
-    </div>
 
-    <!-- GPX Preview -->
-    <div id="gpx-preview"></div>
-    </div>
+            <!-- Scrollable Container and Form for the Coordinates -->
+            <div class="clearfix">
+                <!-- Coordinates Form -->
+                <form id="coordinates-form" action="/generate" method="post">
+                    <div id="coordinate-container">
+                        <table id="coordinate-table">
+                            <thead>
+                                <tr>
+                                    <th>Latitude</th>
+                                    <th>Longitude</th>
+                                </tr>
+                            </thead>
+                            <tbody id="coordinate-table-body"></tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
 
+            <!-- GPX Preview -->
+            <div id="gpx-preview"></div>
+        </div>
+    </div>
     <!-- Google Maps JavaScript API (Initial Load with Server-Provided Key) -->
     <script id="google-maps-api" async defer
         src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
