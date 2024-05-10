@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>GPX Waypoints Generator</title>
     <style>
-        table { width: 100%; }
-        th, td { padding: 5px; text-align: left; }
-        #map { width: 100%; height: 400px; margin-bottom: 20px; }
+        table {
+            width: 100%;
+        }
+
+        th,
+        td {
+            padding: 5px;
+            text-align: left;
+        }
+
+        #map {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
         #coordinate-container {
             width: 100%;
             max-height: 300px;
@@ -141,6 +155,7 @@
         document.addEventListener('DOMContentLoaded', () => addRow(nextRowId));
     </script>
 </head>
+
 <body>
     <h1>GPX Waypoints Generator</h1>
 
@@ -167,6 +182,9 @@
     </form>
 
     <!-- Google Maps JavaScript API -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFGTxOa4hzLxpS5aibw2_52sS9IMYXf2U&callback=initMap"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
+
 </body>
+
 </html>

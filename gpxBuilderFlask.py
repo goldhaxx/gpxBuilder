@@ -2,12 +2,19 @@ from flask import Flask, render_template, request, send_file
 from datetime import datetime, timedelta
 import xml.etree.ElementTree as ET
 import io
+import os
 
 app = Flask(__name__)
 
+""" @app.route('/')
+def index():
+    return render_template('form.html') """
+    
 @app.route('/')
 def index():
-    return render_template('form.html')
+    # Retrieve the API key from the environment
+    google_maps_api_key = os.getenv('GOOGLE_MAPS_API_KEY')
+    return render_template('form.html', google_maps_api_key=google_maps_api_key)    
 
 @app.route('/generate', methods=['POST'])
 def generate_gpx():
