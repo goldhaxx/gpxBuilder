@@ -3,27 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>GPX Waypoints Generator</title>
+
     <style>
-        table { width: 100%; }
-        th, td { padding: 5px; text-align: left; }
-        #map { width: 100%; height: 400px; margin-bottom: 20px; }
-        #coordinate-container {
+        /* Map styles */
+        #map {
             width: 100%;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        /* Coordinate container styles */
+        #coordinate-container {
+            width: 48%;
             max-height: 300px;
             overflow-y: scroll;
             border: 1px solid #ccc;
-            margin-bottom: 20px;
-        }
-        #gpx-preview {
-            width: 28%;
-            height: 300px;
-            overflow-y: scroll;
-            border: 1px solid #ccc;
-            white-space: pre-wrap;
             margin-right: 2%;
             float: left;
         }
+
+        /* Table styles */
+        table {
+            width: 100%;
+        }
+
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+
+        /* GPX preview container styles */
+        #gpx-preview {
+            width: 48%;
+            max-height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            float: left;
+            white-space: pre-wrap;
+        }
+
+        /* Clear floats */
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
     </style>
+
     <script>
         let nextRowId = 0;
         let map;
@@ -176,24 +202,27 @@
         <button onclick="updateGoogleMapsKey()">Update API Key</button>
     </div>
 
-    <!-- Scrollable Container and Form for the Coordinates -->
-    <form action="/generate" method="post">
-        <div id="coordinate-container">
-            <table id="coordinate-table">
-                <thead>
-                    <tr>
-                        <th>Latitude</th>
-                        <th>Longitude</th>
-                    </tr>
-                </thead>
-                <tbody id="coordinate-table-body"></tbody>
-            </table>
-        </div>
-        <input type="submit" value="Generate GPX">
-    </form>
+    <!-- Scrollable Container and GPX Preview -->
+    <div class="clearfix">
+        <!-- Coordinates Form -->
+        <form action="/generate" method="post">
+            <div id="coordinate-container">
+                <table id="coordinate-table">
+                    <thead>
+                        <tr>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                        </tr>
+                    </thead>
+                    <tbody id="coordinate-table-body"></tbody>
+                </table>
+            </div>
+            <input type="submit" value="Generate GPX">
+        </form>
 
         <!-- GPX Preview -->
         <div id="gpx-preview"></div>
+    </div>
 
     <!-- Google Maps JavaScript API (Initial Load with Server-Provided Key) -->
     <script id="google-maps-api" async defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
