@@ -1,26 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>GPX Waypoints Generator</title>
     <style>
-        table {
-            width: 100%;
-        }
-
-        th,
-        td {
-            padding: 5px;
-            text-align: left;
-        }
-
-        #map {
-            width: 100%;
-            height: 400px;
-            margin-bottom: 20px;
-        }
-
+        table { width: 100%; }
+        th, td { padding: 5px; text-align: left; }
+        #map { width: 100%; height: 400px; margin-bottom: 20px; }
         #coordinate-container {
             width: 100%;
             max-height: 300px;
@@ -38,7 +24,7 @@
         // Function to initialize Google Maps
         function initMap() {
             // Initialize with default coordinates
-            const defaultCenter = { lat: 34.05509557203397, lng: -118.24375334349435 };
+            const defaultCenter = { lat: 32.8049, lng: -117.0259 };
 
             // Create the map object
             map = new google.maps.Map(document.getElementById('map'), {
@@ -56,33 +42,6 @@
             });
             polyline.setMap(map);
 
-            // Attempt to get the user's current location
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    const userLatLng = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-
-                    // Center the map on the user's location
-                    map.setCenter(userLatLng);
-                    map.setZoom(14);
-
-                    // Optionally, add a marker to represent the current location
-                    new google.maps.Marker({
-                        position: userLatLng,
-                        map: map,
-                        title: 'Your Location'
-                    });
-                }, function () {
-                    // On error or permission denial, fall back to the default coordinates
-                    map.setCenter(defaultCenter);
-                });
-            } else {
-                // If Geolocation is not supported by the browser
-                map.setCenter(defaultCenter);
-            }
-
             // Listen for right-click events on the map
             map.addListener('rightclick', function (event) {
                 const lat = event.latLng.lat().toFixed(6);
@@ -93,7 +52,6 @@
 
         // Function to add coordinates to the form and map
         function addCoordinatesToFormAndMap(lat, lon) {
-            // Populate the latitude and longitude fields
             document.getElementById('lat-' + nextRowId).value = lat;
             document.getElementById('lon-' + nextRowId).value = lon;
             nextRowId++;
@@ -124,30 +82,23 @@
             table.insertAdjacentHTML('beforeend', newRow);
         }
 
-        // Function to center the map on the user's current location via a button click
-        function centerOnCurrentLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    const userLatLng = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
+        // Function to update the Google Maps API key and reload the map
+        function updateGoogleMapsKey() {
+            const userApiKey = document.getElementById('user-api-key').value;
+            if (userApiKey) {
+                // Replace the existing Google Maps script
+                const oldScript = document.getElementById('google-maps-api');
+                oldScript.parentNode.removeChild(oldScript);
 
-                    // Center the map on the user's location
-                    map.setCenter(userLatLng);
-                    map.setZoom(14);
-
-                    // Optionally, add a marker to represent the current location
-                    new google.maps.Marker({
-                        position: userLatLng,
-                        map: map,
-                        title: 'Your Location'
-                    });
-                }, function () {
-                    alert("Error: Unable to retrieve your location.");
-                });
+                // Create a new script element with the user-provided key
+                const newScript = document.createElement('script');
+                newScript.id = 'google-maps-api';
+                newScript.async = true;
+                newScript.defer = true;
+                newScript.src = `https://maps.googleapis.com/maps/api/js?key=${userApiKey}&callback=initMap`;
+                document.head.appendChild(newScript);
             } else {
-                alert("Geolocation is not supported by this browser.");
+                alert("Please enter a valid API key.");
             }
         }
 
@@ -155,7 +106,6 @@
         document.addEventListener('DOMContentLoaded', () => addRow(nextRowId));
     </script>
 </head>
-
 <body>
     <h1>GPX Waypoints Generator</h1>
 
@@ -164,6 +114,12 @@
 
     <!-- Center on Current Location Button -->
     <button onclick="centerOnCurrentLocation()">Center on Current Location</button>
+
+    <!-- Google Maps API Key Input and Button -->
+    <div>
+        <input type="text" id="user-api-key" placeholder="Enter your Google Maps API Key">
+        <button onclick="updateGoogleMapsKey()">Update API Key</button>
+    </div>
 
     <!-- Scrollable Container and Form for the Coordinates -->
     <form action="/generate" method="post">
@@ -181,10 +137,7 @@
         <input type="submit" value="Generate GPX">
     </form>
 
-    <!-- Google Maps JavaScript API -->
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
-
+    <!-- Google Maps JavaScript API (Initial Load with Server-Provided Key) -->
+    <script id="google-maps-api" async defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
 </body>
-
 </html>
