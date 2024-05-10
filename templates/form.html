@@ -14,6 +14,15 @@
             border: 1px solid #ccc;
             margin-bottom: 20px;
         }
+        #gpx-preview {
+            width: 28%;
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            white-space: pre-wrap;
+            margin-right: 2%;
+            float: left;
+        }
     </style>
     <script>
         let nextRowId = 0;
@@ -68,6 +77,9 @@
 
             // Update polyline path
             polyline.setPath(waypoints);
+
+            // Update GPX preview
+            updateGPXPreview();
         }
 
         // Function to add a new row dynamically
@@ -129,6 +141,22 @@
             }
         }
 
+        // Function to generate GPX data and update the preview
+        function updateGPXPreview() {
+            let gpxContent = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="GPX Generator">\n`;
+
+            // Iterate through waypoints to generate GPX waypoints
+            waypoints.forEach((point, index) => {
+                gpxContent += `<wpt lat="${point.lat()}" lon="${point.lng()}">\n`;
+                gpxContent += `<name>Waypoint ${index + 1}</name>\n</wpt>\n`;
+            });
+
+            gpxContent += `</gpx>`;
+
+            // Display GPX content in the preview container
+            document.getElementById('gpx-preview').textContent = gpxContent;
+        }
+
         // Initial function call to set up the first input row
         document.addEventListener('DOMContentLoaded', () => addRow(nextRowId));
     </script>
@@ -163,6 +191,9 @@
         </div>
         <input type="submit" value="Generate GPX">
     </form>
+
+        <!-- GPX Preview -->
+        <div id="gpx-preview"></div>
 
     <!-- Google Maps JavaScript API (Initial Load with Server-Provided Key) -->
     <script id="google-maps-api" async defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
