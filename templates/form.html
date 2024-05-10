@@ -7,11 +7,10 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-r6nF3XlJGag+7va2KVIxx4s7eNt6n4nojKHrX0dk8VcOMqlv94FwvIm1Pj2Rr+aM" crossorigin="anonymous">
+        crossorigin="anonymous">
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-k6RqeW9WjesuK8U9uXU7M8HxBefgo4ghlvDpXsZT77/uXwjFBmtC6mG6i8qZwPjV"
         crossorigin="anonymous"></script>
 
 
@@ -227,27 +226,32 @@
 
 <body>
     <div class="container mt-4">
-        <h1 class="mb-4">GPX Waypoints Generator</h1>
+        <h1 class="text-center">GPX Waypoints Generator</h1>
         <div class="row">
             <!-- Map Element -->
             <div id="map"></div>
-
-            <!-- Control Bar with Buttons and Input Field -->
-            <div id="control-bar">
-                <div>
-                    <input type="text" id="user-api-key" placeholder="Enter your Google Maps API Key">
-                    <button class="control-button" onclick="updateGoogleMapsKey()">Update API Key</button>
+        </div>
+        <!-- Control Bar with Buttons and Input Field -->
+        <div class="row" id="control-bar">
+            <div class="col">
+                <input type="text" id="user-api-key" placeholder="Google Maps API Key">
                 </div>
-                <button class="control-button" onclick="centerOnCurrentLocation()">Center on Current Location</button>
-                <!-- Button triggers form submission via JavaScript -->
-                <button class="control-button" onclick="submitCoordinatesForm()">Generate GPX</button>
+            <div class="col">
+                <button type="button" class="btn btn-dark" onclick="updateGoogleMapsKey()">Update API Key</button>
             </div>
+            <div class="col">
+                <button type="button" class="btn btn-dark" onclick="centerOnCurrentLocation()">Center on Current Location</button></div>
+            <!-- Button triggers form submission via JavaScript -->
+            <div class="col">
+            <button type="button" class="btn btn-dark" onclick="submitCoordinatesForm()">Generate GPX</button></div>
+        </div>
+        <!-- <button class="control-button" onclick="addCoordinatesToFormAndMap(34.054825252573075, -118.24331830957996)">Add Default Coordinates</button> -->
 
-            <!-- Scrollable Container and Form for the Coordinates -->
-            <div class="clearfix">
+        <!-- Scrollable Container and Form for the Coordinates -->
+        <div class="row">
+            <div class="col" id="coordinate-container">
                 <!-- Coordinates Form -->
                 <form id="coordinates-form" action="/generate" method="post">
-                    <div id="coordinate-container">
                         <table id="coordinate-table">
                             <thead>
                                 <tr>
@@ -259,10 +263,10 @@
                         </table>
                     </div>
                 </form>
-            </div>
+
 
             <!-- GPX Preview -->
-            <div id="gpx-preview"></div>
+            <div class="col" id="gpx-preview"></div>
         </div>
     </div>
     <!-- Google Maps JavaScript API (Initial Load with Server-Provided Key) -->
