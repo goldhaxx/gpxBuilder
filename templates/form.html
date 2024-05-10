@@ -102,6 +102,33 @@
             }
         }
 
+                // Function to center the map on the user's current location
+                function centerOnCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const userLatLng = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    // Center the map on the user's location
+                    map.setCenter(userLatLng);
+                    map.setZoom(14);
+
+                    // Optionally, add a marker to represent the current location
+                    new google.maps.Marker({
+                        position: userLatLng,
+                        map: map,
+                        title: 'Your Location'
+                    });
+                }, function () {
+                    alert("Error: Unable to retrieve your location.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
         // Initial function call to set up the first input row
         document.addEventListener('DOMContentLoaded', () => addRow(nextRowId));
     </script>
