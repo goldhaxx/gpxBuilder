@@ -3,13 +3,10 @@ from datetime import datetime, timedelta
 import xml.etree.ElementTree as ET
 import io
 import os
+from geopy.distance import geodesic
 
 app = Flask(__name__)
 
-""" @app.route('/')
-def index():
-    return render_template('form.html') """
-    
 @app.route('/')
 def index():
     # Retrieve the API key from the environment
@@ -35,18 +32,20 @@ def generate_gpx():
     gpx = ET.Element("gpx", version="1.1", creator="Flask Web App")
 
     # Starting timestamp
-    start_time = datetime(2024, 5, 7, 12, 0, 0)
+    start_time = datetime.now()
 
-    # Create waypoint elements
-    for index, (lat, lon) in enumerate(coordinates):
-        waypoint = ET.SubElement(gpx, "wpt", lat=str(lat), lon=str(lon))
-        name = ET.SubElement(waypoint, "name")
-        name.text = f"Waypoint {index + 1}"
-
-        # Increment the timestamp for each waypoint
-        time = ET.SubElement(waypoint, "time")
-        waypoint_time = start_time + timedelta(minutes=index)
-        time.text = waypoint_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+    # Create waypoint elements and calculate times based on distance
+    current_time = start_time
+    for index, coord in enumerate(coordinates):
+        if index > 0:
+            # Calculate distance between the current and previous waypoint
+            distance = geodesic(coordinates[index - 1], coord).kilometers
+            travel_time = timedelta(hours=distance / 10)  # Speed: 10 km/h
+            current_time += travel_time
+        
+        waypoint = ET.SubElement(gpx, "wpt", lat=str(coord[0]), lon=str(coord[1]))
+        ET.SubElement(waypoint, "name").text = f"Waypoint {index + 1}"
+        ET.SubElement(waypoint, "time").text = current_time.strftime("%Y-%m-%dT%H:%M:%SZ")
 
     # Generate the XML tree structure
     gpx_tree = ET.ElementTree(gpx)
